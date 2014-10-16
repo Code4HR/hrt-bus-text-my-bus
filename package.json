@@ -1,0 +1,22 @@
+{
+  "name": "hrt-bus-text-my-bus",
+  "version": "1.0.0",
+  "description": "hrt-bus-text-my-bus ===================",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stanzheng/hrt-bus-text-my-bus.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/stanzheng/hrt-bus-text-my-bus/issues"
+  },
+  "homepage": "https://github.com/stanzheng/hrt-bus-text-my-bus",
+  "dependencies": {
+    "request": "^2.45.0"
+  }
+}
