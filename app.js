@@ -17,7 +17,7 @@ app.post('/text', function (req,res) {
 // serve public
 
 app.get('/', function (req,res) {
-
+  res.redirect(301, 'http://hrtb.us');
 });
 
 
