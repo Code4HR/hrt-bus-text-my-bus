@@ -21,6 +21,11 @@ app.get('/', function (req,res) {
 });
 
 
+app.get('/msg', function (req,res) {
+  res.send("Welcome to HRTB.us A volunteer project created by Code4HR. http://code4hr.org Just a moment, we're getting your bus stop information."));
+});
+
+
 app.set('port', process.env.PORT || 3000);
 
 app.listen(app.get('port'), function() {
