@@ -2,7 +2,7 @@ var r = require("request");
 var express = require("express");
 var app = express();
 var api = "http://api.hrtb.us/api/stop_times/8004";
-var path = require('path'),
+var path = require('path');
  twilio = require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 
 app.use(express.static(path.join(__dirname, 'public')));

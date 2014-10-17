@@ -18,6 +18,7 @@
   "homepage": "https://github.com/stanzheng/hrt-bus-text-my-bus",
   "dependencies": {
     "express": "^4.9.7",
+    "path": "^0.4.9",
     "request": "^2.45.0",
     "twilio": "^1.7.0"
   }
