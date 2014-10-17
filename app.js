@@ -1,14 +1,11 @@
 var r = require("request");
 var express = require("express");
 var app = express();
-var api = "http://api.hrtb.us/api/stop_times/8004";
 var path = require('path');
  twilio = require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 
 app.use(express.static(path.join(__dirname, 'public')));
-// r.get(api, function (err, res, body) {
-//   console.log(body);
-// });
+
 var data = [];
 app.post('/text', function (req,res) {
 
@@ -39,6 +36,17 @@ app.get('/', function (req,res) {
   res.redirect(301, 'http://hrtb.us');
 });
 
+
+
+app.get('/notify/:bus/:number', function (req,res) {
+  var api = "http://api.hrtb.us/api/stop_times/";
+  var bus = req.params.bus;
+  r.get(api+bus, function (err, response, body) {
+    console.log(api+bus);
+    res.send(body);
+  });
+
+});
 
 app.post('/msg', function (req,res) {
   res.send("Welcome to HRTB.us A volunteer project created by Code4HR. http://code4hr.org Just a moment, we're getting your bus stop information.");
