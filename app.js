@@ -13,10 +13,51 @@ app.get('/', function (req,res) {
   res.redirect(301, 'http://hrtb.us');
 });
 
+// app.post('/msg', function (req,res) {
+//   res.writeHead(200, {'Content-Type': 'text/xml'});
+//   console.log(JSON.stringify(req.params));
+//   res.end(getResponse(req.query));
+// });
+
 app.post('/msg', function (req,res) {
-  console.log(req.query);
-  res.send(getResponse(req.query));
+    if (req.method == 'POST') {
+        var body = '';
+
+        req.on('data', function (data) {
+            body += data;
+        });
+
+        req.on('end', function () {
+
+            var POST = qs.parse(body);
+
+            //validate incoming request is from twilio using your auth token and the header from Twilio
+            var token = process.env.TWILIO_AUTH_TOKEN,
+                header = req.headers['x-twilio-signature'];
+
+            //validateRequest returns true if the request originated from Twilio
+            if (twilio.validateRequest(token, header, 'http://hrtbus.herokuapp.com', POST)) {
+                //generate a TwiML response
+                var resp = new twilio.TwimlResponse();
+                resp.say('hello, twilio!');
+
+                res.writeHead(200, { 'Content-Type':'text/xml' });
+                res.end(resp.toString());
+            }
+            else {
+                res.writeHead(403, { 'Content-Type':'text/plain' });
+                res.end('you are not twilio - take a hike.');
+            }
+        });
+    }
+    else {
+        res.writeHead(404, { 'Content-Type':'text/plain' });
+        res.end('send a POST');
+    }
+
 });
+
+
 
 //EVMS/NORFOLK will be here in about 10, the next one in 15
 //NEWTOWN ROAD will be here in about 5 minutes and the next
