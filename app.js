@@ -48,8 +48,8 @@ app.get('/notify/:bus/:number', function (req,res) {
 });
 
 app.post('/msg', function (req,res) {
-  console.log(req.body);
-  res.send(getResponse());
+  console.log(req.body.Body);
+  res.send(getResponse(req.body.Body));
 });
 
 //EVMS/NORFOLK will be here in about 10, the next one in 15
@@ -71,7 +71,7 @@ function test() {
 }
 
 function getResponse(message) {
-  return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Response>\n<Message>" + "buddy!" + "</Message>\n</Response>";
+  return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Response>\n<Message>" + message + "</Message>\n</Response>";
 }
 
 test();
