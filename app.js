@@ -14,7 +14,8 @@ app.get('/', function (req,res) {
 });
 
 app.post('/msg', function (req,res) {
-  res.send(getResponse(req.query.Body));
+  console.log(req.query);
+  res.send(getResponse(req.query));
 });
 
 //EVMS/NORFOLK will be here in about 10, the next one in 15
