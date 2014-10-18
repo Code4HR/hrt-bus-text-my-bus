@@ -7,7 +7,12 @@ var twilio = require('twilio');
 var moment = require('moment');
 var _ = require('lodash');
 var qs = require('querystring');
+var bodyParser = require('body-parser');
 
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // serve public
@@ -15,43 +20,19 @@ app.get('/', function (req,res) {
   res.redirect(301, 'http://hrtb.us');
 });
 
-// app.post('/msg', function (req,res) {
-//   res.writeHead(200, {'Content-Type': 'text/xml'});
-//   console.log(JSON.stringify(req.params));
-//   res.end(getResponse(req.query));
-// });
-
 app.post('/msg', function (req,res) {
-    if (req.method == 'POST') {
-        var body = '';
-
-        req.on('data', function (data) {
-            body += data;
-        });
-
-        req.on('end', function () {
-
-            var POST = qs.parse(body);
-
-            //validate incoming request is from twilio using your auth token and the header from Twilio
-            var token = process.env.TWILIO_AUTH_TOKEN,
-                header = req.headers['x-twilio-signature'];
-
-            res.writeHead(200, { 'Content-Type':'text/xml' });
-            console.log("****DEBUGGING***");
-            console.log(req.query);
-            console.log(req.body);
-            console.log(req.params);
-            res.end((getResponse(req.body.Body)));
-
-        });
-    }
-    else {
-        res.writeHead(404, { 'Content-Type':'text/plain' });
-        res.end('send a POST');
-    }
-
+  res.writeHead(200, {'Content-Type': 'text/xml'});
+  console.log("****DEBUGGING***");
+  console.log(req.headers);
+  console.log(req.query);
+  console.log(req.body);
+  console.log(req.form);
+  console.log(req.params);
+  console.log(req.params.Body);
+  res.end(getResponse(JSON.stringify(req.body.Body)));
 });
+
+
 
 
 
