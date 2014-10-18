@@ -2,7 +2,9 @@ var r = require("request");
 var express = require("express");
 var app = express();
 var path = require('path');
- twilio = require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+//var twilio = require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+var twilio = require(twilio);
+var resp = new twilio.TwimlResponse();
 var moment = require('moment');
 var _ = require('lodash');
 var qs = require('querystring');
@@ -37,7 +39,6 @@ app.post('/msg', function (req,res) {
                 header = req.headers['x-twilio-signature'];
 
             //generate a TwiML response
-            var resp = new twilio.TwimlResponse();
             resp.say('hello, twilio!');
 
             res.writeHead(200, { 'Content-Type':'text/xml' });
