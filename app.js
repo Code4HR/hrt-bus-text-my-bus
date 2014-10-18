@@ -48,6 +48,7 @@ app.get('/notify/:bus/:number', function (req,res) {
 });
 
 app.post('/msg', function (req,res) {
+  console.log(req.body);
   res.send(getResponse());
 });
 
