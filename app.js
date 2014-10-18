@@ -38,7 +38,11 @@ app.post('/msg', function (req,res) {
                 header = req.headers['x-twilio-signature'];
 
             res.writeHead(200, { 'Content-Type':'text/xml' });
-            res.end((getResponse(req.query.Body)));
+            console.log("****DEBUGGING***");
+            console.log(req.query);
+            console.log(req.body);
+            console.log(req.params);
+            res.end((getResponse(req.body.Body)));
 
         });
     }
