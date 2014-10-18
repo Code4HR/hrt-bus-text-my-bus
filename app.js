@@ -36,19 +36,13 @@ app.post('/msg', function (req,res) {
             var token = process.env.TWILIO_AUTH_TOKEN,
                 header = req.headers['x-twilio-signature'];
 
-            //validateRequest returns true if the request originated from Twilio
-            if (twilio.validateRequest(token, header, 'http://hrtbus.herokuapp.com', POST)) {
-                //generate a TwiML response
-                var resp = new twilio.TwimlResponse();
-                resp.say('hello, twilio!');
+            //generate a TwiML response
+            var resp = new twilio.TwimlResponse();
+            resp.say('hello, twilio!');
 
-                res.writeHead(200, { 'Content-Type':'text/xml' });
-                res.end(resp.toString());
-            }
-            else {
-                res.writeHead(403, { 'Content-Type':'text/plain' });
-                res.end('you are not twilio - take a hike.');
-            }
+            res.writeHead(200, { 'Content-Type':'text/xml' });
+            res.end(resp.toString());
+
         });
     }
     else {
