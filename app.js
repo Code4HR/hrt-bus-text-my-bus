@@ -20,6 +20,10 @@ app.get('/', function (req,res) {
   res.redirect(301, 'http://hrtb.us');
 });
 
+
+// example curl from twilio
+/**  curl -X POST -d "From=3031111111&Body=Test Message" http://localhost:3000/msg **/
+
 app.post('/msg', function (req,res) {
   res.writeHead(200, {'Content-Type': 'text/xml'});
   console.log("****DEBUGGING***");
@@ -29,7 +33,11 @@ app.post('/msg', function (req,res) {
   console.log(req.form);
   console.log(req.params);
   console.log(req.params.Body);
-  res.end(getResponse(JSON.stringify(req.body.Body)));
+
+  //TRANSFORM THIS DATA
+  var busstop = req.body.Body;
+
+  res.end(getResponse(req.body.Body));
 });
 
 
