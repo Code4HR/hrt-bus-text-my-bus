@@ -57,11 +57,19 @@ function getResponse(message) {
   return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Response>\n<Message>" + message + "</Message>\n</Response>";
 }
 
+//http://hrtb.us/#stops/0263
 function debugging() {
   r.get("http://api.hrtb.us/api/stop_times/8004", function (err, response, body) {
-    console.log("http://api.hrtb.us/api/stop_times/8004");
-    var test = _.groupBy(JSON.parse(body),"destination");
-    console.log(test);
+    var info = [];
+    //console.log("http://api.hrtb.us/api/stop_times/8004");
+    var destinations = _.groupBy(JSON.parse(body),"destination");
+    _.each(destinations, function (place) {
+      _.each(place, function (route) {
+        info.push(route.departure_time);
+      });
+    });
+    console.log(destinations);
+    console.log(info);
   });
 }
 
