@@ -61,14 +61,18 @@ function getResponse(message) {
 function debugging() {
   r.get("http://api.hrtb.us/api/stop_times/8004", function (err, response, body) {
     var info = [];
-    //console.log("http://api.hrtb.us/api/stop_times/8004");
     var destinations = _.groupBy(JSON.parse(body),"destination");
-    _.each(destinations, function (place) {
-      _.each(place, function (route) {
-        info.push(route.departure_time);
+    var routes;
+    _.each(destinations, function (route) {
+      _.each(route, function (stop, key) {
+
+        info.push(stop.routeShortName + " to "+ key + " in " + stop.departure_time + " mins");
       });
+      //routes = _.groupBy(destinations, "routes");
     });
-    console.log(destinations);
+    //_.groupBy(destinations, "routes");
+    //each destination
+    //each route
     console.log(info);
   });
 }
