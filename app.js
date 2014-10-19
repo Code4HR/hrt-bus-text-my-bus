@@ -65,6 +65,19 @@ function getResponse(message) {
 		    '4': 'ferry'
 		},
 */
+//
+// var date = function(arrival_time) {
+//   return new Date(Date.toISOString(arrival_time));
+// };
+// var calculateTime = function (busAdherence) {
+//   var arriveTime = date();
+//   if(busAdherence) {
+//     arriveTime = arriveTime.addMinutes(busAdherence * -1);
+//   }
+//
+//   var arriveTimeFromNow = new Date(arriveTime - new Date().getTime());
+//   return (arriveTimeFromNow.getTime() / 1000 / 60 | 0);
+// };
 
 function debugging() {
   r.get("http://api.hrtb.us/api/stop_times/8004", function (err, response, body) {
@@ -74,10 +87,11 @@ function debugging() {
     var now = moment();
     _.each(destinations, function (route) {
       _.each(route, function (stop, key) {
-
-        //console.log(moment(stop.actual_arrival_time).utc());
-        info.push(stop.routeShortName + " to "+ stop.destination + " in " + moment(stop.actual_arrival_time).diff(now,'minutes') + " mins");
-        console.log(arriveTimeFromNow);
+      //  console.log(calculateTime(stop.busAdherence));
+      var time = moment(stop.arrival_time, "minute").diff(now);
+        console.log(time);
+        info.push(stop.routeShortName + " to "+ stop.destination + " in " + time + " mins");
+        //console.log(arriveTimeFromNow);
       });
       //routes = _.groupBy(destinations, "routes");
     });
