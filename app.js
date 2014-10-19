@@ -58,15 +58,26 @@ function getResponse(message) {
 }
 
 //http://hrtb.us/#stops/0263
+/*
+		routeType: {
+		    '0': 'light-rail',
+		    '3': 'bus',
+		    '4': 'ferry'
+		},
+*/
+
 function debugging() {
   r.get("http://api.hrtb.us/api/stop_times/8004", function (err, response, body) {
     var info = [];
     var destinations = _.groupBy(JSON.parse(body),"destination");
     var routes;
+    var now = moment();
     _.each(destinations, function (route) {
       _.each(route, function (stop, key) {
 
-        info.push(stop.routeShortName + " to "+ key + " in " + stop.departure_time + " mins");
+        //console.log(moment(stop.actual_arrival_time).utc());
+        info.push(stop.routeShortName + " to "+ stop.destination + " in " + moment(stop.actual_arrival_time).diff(now,'minutes') + " mins");
+        console.log(arriveTimeFromNow);
       });
       //routes = _.groupBy(destinations, "routes");
     });
