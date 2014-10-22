@@ -58,13 +58,12 @@ function getResponse(message) {
 }
 
 //http://hrtb.us/#stops/0263
-/*
-		routeType: {
-		    '0': 'light-rail',
-		    '3': 'bus',
-		    '4': 'ferry'
-		},
-*/
+
+var	routeType = {
+  '0': 'light-rail',
+  '3': 'bus',
+  '4': 'ferry'
+};
 //
 // var date = function(arrival_time) {
 //   return new Date(Date.toISOString(arrival_time));
@@ -82,6 +81,7 @@ function getResponse(message) {
 function debugging() {
   r.get("http://api.hrtb.us/api/stop_times/8004", function (err, response, body) {
     var info = [];
+    var stops = {};
     var destinations = _.groupBy(JSON.parse(body),"destination");
     var routes;
     //get the time now
@@ -92,18 +92,34 @@ function debugging() {
       //  console.log(calculateTime(stop.busAdherence));
       console.log(stop.arrival_time);
       var time = moment(stop.arrival_time).diff(now);
-      //TODO DANGEROUS -- DAYLIGHT SAVINGS TIME WILL BREAK THIS
+      // TODO DANGEROUS -- DAYLIGHT SAVINGS TIME WILL BREAK THIS
       var d = moment.duration(time).subtract("240","minutes");
       time = Math.ceil(d.asMinutes()-240);
-        info.push(stop.routeShortName + " to "+ stop.destination + " in " + time + " mins");
-        //console.log(arriveTimeFromNow);
+        //new stop
+      if (_.isUndefined(stops[stop.destination]) && time > 0 ){
+          console.log("new stop");
+          stops[stop.destination] = {
+            "route": stop.routeShortName,
+            "time": [time],
+            "type": routeType[stop.drop_off_type]
+          };
+      }
+      else if (time > 0 ){
+        //existing stop
+        console.log(stops[stop.destination]);
+        stops[stop.destination].time.push(time);
+      }
       });
-      //routes = _.groupBy(destinations, "routes");
     });
-    //_.groupBy(destinations, "routes");
-    //each destination
-    //each route
-    console.log(info);
+    //prnit messages
+    console.log(stops);
+    toText(stops);
+  });
+}
+function toText(stops) {
+  _.each(stops, function (value, key){
+
+    console.log(value.type + " " +  value.route +  " to "+ key + " in " + value.time + " mins");
   });
 }
 
