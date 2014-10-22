@@ -84,14 +84,17 @@ function debugging() {
     var info = [];
     var destinations = _.groupBy(JSON.parse(body),"destination");
     var routes;
+    //get the time now
     var now = moment.utc(new Date());
+    //sort by routes and destinations
     _.each(destinations, function (route) {
       _.each(route, function (stop, key) {
       //  console.log(calculateTime(stop.busAdherence));
       console.log(stop.arrival_time);
       var time = moment(stop.arrival_time).diff(now);
+      //TODO DANGEROUS -- DAYLIGHT SAVINGS TIME WILL BREAK THIS
       var d = moment.duration(time).subtract("240","minutes");
-      time = d.asMinutes()-240;
+      time = Math.ceil(d.asMinutes()-240);
         info.push(stop.routeShortName + " to "+ stop.destination + " in " + time + " mins");
         //console.log(arriveTimeFromNow);
       });
