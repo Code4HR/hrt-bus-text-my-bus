@@ -8,7 +8,6 @@ var moment = require('moment');
 var _ = require('lodash');
 var qs = require('querystring');
 var bodyParser = require('body-parser');
-var data = require('data.json');
 
 app.use(bodyParser.urlencoded({
   extended: true
@@ -46,7 +45,6 @@ app.get('/msg/:id', function (req, res) {
 });
 
 
-
 //EVMS/NORFOLK will be here in about 10, the next one in 15
 //NEWTOWN ROAD will be here in about 5 minutes and the next
 
@@ -81,7 +79,9 @@ var	routeType = {
 //   return (arriveTimeFromNow.getTime() / 1000 / 60 | 0);
 // };
 
-function debugging(param) {
+/**Makes API request to the HRTB.US API and transform the json results **/
+
+function getStops(param) {
   if (_.isUndefined(param)){
      param = "8004";
   }
@@ -117,6 +117,8 @@ function debugging(param) {
     console.log(toText(stops));
   });
 }
+
+/** Stringify createed text object from from getStops **/
 function toText(stops) {
   var response = '';
   var aTimes;
@@ -137,4 +139,4 @@ function toText(stops) {
     return response;
 }
 
-debugging();
+getStops();
