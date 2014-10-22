@@ -89,15 +89,12 @@ function debugging() {
     //sort by routes and destinations
     _.each(destinations, function (route) {
       _.each(route, function (stop, key) {
-      //  console.log(calculateTime(stop.busAdherence));
-      console.log(stop.arrival_time);
       var time = moment(stop.arrival_time).diff(now);
       // TODO DANGEROUS -- DAYLIGHT SAVINGS TIME WILL BREAK THIS
       var d = moment.duration(time).subtract("240","minutes");
       time = Math.ceil(d.asMinutes()-240);
         //new stop
       if (_.isUndefined(stops[stop.destination]) && time > 0 ){
-          console.log("new stop");
           stops[stop.destination] = {
             "route": stop.routeShortName,
             "time": [time],
@@ -106,21 +103,31 @@ function debugging() {
       }
       else if (time > 0 ){
         //existing stop
-        console.log(stops[stop.destination]);
         stops[stop.destination].time.push(time);
       }
       });
     });
-    //prnit messages
-    console.log(stops);
-    toText(stops);
+    console.log(toText(stops));
   });
 }
 function toText(stops) {
+  var response = '';
+  var aTimes;
+  var next;
   _.each(stops, function (value, key){
-
-    console.log(value.type + " " +  value.route +  " to "+ key + " in " + value.time + " mins");
+    next = value.time.slice(1);
+    if (next !== []) {
+       aTimes = _.reduce(next, function (a, b) {
+        return a + " & " + b;
+      });
+      next = "next " + value.type + " in "+ aTimes+ " mins";
+    }
+    else {
+      next = "";
+    }
+    response += value.type + " " +  value.route +  " to "+ key + " in " + value.time[0] + " mins "+ next + "\n";
   });
+    return response;
 }
 
 debugging();
