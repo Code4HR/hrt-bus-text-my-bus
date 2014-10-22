@@ -8,6 +8,7 @@ var moment = require('moment');
 var _ = require('lodash');
 var qs = require('querystring');
 var bodyParser = require('body-parser');
+var data = require('data.json');
 
 app.use(bodyParser.urlencoded({
   extended: true
@@ -40,7 +41,9 @@ app.post('/msg', function (req,res) {
   res.end(getResponse(req.body.Body));
 });
 
-
+app.get('/msg/:id', function (req, res) {
+  res.send(req.params.id);
+});
 
 
 
@@ -78,8 +81,12 @@ var	routeType = {
 //   return (arriveTimeFromNow.getTime() / 1000 / 60 | 0);
 // };
 
-function debugging() {
-  r.get("http://api.hrtb.us/api/stop_times/8004", function (err, response, body) {
+function debugging(param) {
+  if (_.isUndefined(param)){
+     param = "8004";
+  }
+
+  r.get("http:/api.hrtb.us/api/stop_times/", function (err, response, body) {
     var info = [];
     var stops = {};
     var destinations = _.groupBy(JSON.parse(body),"destination");
