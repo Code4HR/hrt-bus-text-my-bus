@@ -84,12 +84,14 @@ function debugging() {
     var info = [];
     var destinations = _.groupBy(JSON.parse(body),"destination");
     var routes;
-    var now = moment();
+    var now = moment.utc(new Date());
     _.each(destinations, function (route) {
       _.each(route, function (stop, key) {
       //  console.log(calculateTime(stop.busAdherence));
-      var time = moment(stop.arrival_time, "minute").diff(now);
-        console.log(time);
+      console.log(stop.arrival_time);
+      var time = moment(stop.arrival_time).diff(now);
+      var d = moment.duration(time).subtract("240","minutes");
+      time = d.asMinutes()-240;
         info.push(stop.routeShortName + " to "+ stop.destination + " in " + time + " mins");
         //console.log(arriveTimeFromNow);
       });
