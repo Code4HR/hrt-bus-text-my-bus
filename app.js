@@ -89,7 +89,7 @@ function getStops(param) {
   r.get("http:/api.hrtb.us/api/stop_times/", function (err, response, body) {
     var info = [];
     var stops = {};
-    var destinations = _.groupBy(JSON.parse(body),"destination");
+    var destinations = _.groupBy(body, "destintation");
     var routes;
     //get the time now
     var now = moment.utc(new Date());
