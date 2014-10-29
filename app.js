@@ -82,14 +82,16 @@ var	routeType = {
 /**Makes API request to the HRTB.US API and transform the json results **/
 
 function getStops(param) {
+//  param = "8004";
   if (_.isUndefined(param)){
      param = "8004";
   }
 
-  r.get("http:/api.hrtb.us/api/stop_times/", function (err, response, body) {
+  var url = "http://api.hrtb.us/api/stop_times/"+ param;
+  r.get(url, function (err, response, body) {
     var info = [];
     var stops = {};
-    var destinations = _.groupBy(body, "destintation");
+    var destinations = _.groupBy(JSON.parse(body), "destination");
     var routes;
     //get the time now
     var now = moment.utc(new Date());
