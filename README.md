@@ -10,7 +10,7 @@ TWILIO_ACCOUNT_SID=''; TWILIO_AUTH_TOKEN=''; node app.js
 
 HRT BUS API
 
-[Imgur](http://i.imgur.com/UTX2FUu.png)
+![Imgur](http://i.imgur.com/UTX2FUu.png)
 
 
 http://api.hrtb.us/api/
