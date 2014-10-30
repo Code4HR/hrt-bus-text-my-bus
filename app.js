@@ -8,6 +8,7 @@ var moment = require('moment');
 var _ = require('lodash');
 var qs = require('querystring');
 var bodyParser = require('body-parser');
+var bPromise = require('bluebird');
 
 app.use(bodyParser.urlencoded({
   extended: true
@@ -41,7 +42,9 @@ app.post('/msg', function (req,res) {
 });
 
 app.get('/msg/:id', function (req, res) {
-  res.send(req.params.id);
+
+  getStops(req.params.id).then(res.send.bind(res));
+
 });
 
 
@@ -83,12 +86,21 @@ var	routeType = {
 
 function getStops(param) {
 //  param = "8004";
+  console.log(param);
   if (_.isUndefined(param)){
      param = "8004";
   }
+  return new bPromise(function (resolve, reject) {
 
   var url = "http://api.hrtb.us/api/stop_times/"+ param;
   r.get(url, function (err, response, body) {
+    console.log(JSON.parse(body));
+    console.log(body);
+    console.log(typeof JSON.parse(body));
+
+    if (JSON.parse(body) === []){
+      return resolve("not a valid stop");
+    }
     var info = [];
     var stops = {};
     var destinations = _.groupBy(JSON.parse(body), "destination");
@@ -117,7 +129,9 @@ function getStops(param) {
       });
     });
     console.log(toText(stops));
+    resolve(toText(stops));
   });
+}); // end of promise
 }
 
 /** Stringify createed text object from from getStops **/
