@@ -43,7 +43,7 @@ app.post('/msg', function (req,res) {
 
 app.get('/msg/:id', function (req, res) {
 
-  getStops(req.params.id).then(res.send.bind(res));
+  getStops(req.params.id).then(getResponse).then(res.send.bind(res));
 
 });
 
@@ -58,7 +58,9 @@ app.listen(app.get('port'), function() {
 });
 
 function getResponse(message) {
-  return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Response>\n<Message>" + message + "</Message>\n</Response>";
+  return new bPromise(function (resolve, reject) {
+  resolve("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Response>\n<Message>" + message + "</Message>\n</Response>");
+  });
 }
 
 //http://hrtb.us/#stops/0263
@@ -85,7 +87,7 @@ var	routeType = {
 /**Makes API request to the HRTB.US API and transform the json results **/
 
 function getStops(param) {
-//  param = "8004";
+  param = "8004";
   console.log(param);
   if (_.isUndefined(param)){
      param = "8004";
