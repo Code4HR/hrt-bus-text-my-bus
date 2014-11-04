@@ -31,9 +31,10 @@ app.post('/msg', function (req,res) {
   console.log(req.headers);
   console.log(req.query);
   console.log(req.body);
-  console.log(req.form);
+  console.log("form",req.form);
   console.log(req.params);
-  console.log(req.params.Body);
+//  console.log(req.params.Body);
+
 
   //TRANSFORM THIS DATA
   var busstop = req.body.Body;
