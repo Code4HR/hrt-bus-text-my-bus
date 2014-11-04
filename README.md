@@ -16,7 +16,11 @@ This is using TWIML a twilio XML format for formatting reponse messages. The Nod
 
 Currently there is a heroku service setup at http://hrtbus.herokuapp.com/msg/8004 that parses and creates messages for twilio to send out.
 
+development
+---
+To test locally you DO NOT need to set up twilio. You can install the dependencies and test locally what type of reponse messages are formed from the console.
 
+The rest will be handled by the third party service
 
 installation
 ----
