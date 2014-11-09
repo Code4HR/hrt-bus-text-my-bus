@@ -50,7 +50,7 @@
         console.log(req.body);
         console.log("form",req.form);
         console.log(req.params);
-        res.end(getResponse(req.body.Body));
+        getResponse(req.body.Body).then(res.end.bind(res));
     });
 
     /**
@@ -131,7 +131,6 @@
         console.log('Express server listening on port ' + app.get('port'));
     });
 
-    //http://hrtb.us/#stops/0263
-
+    // http://hrtb.us/#stops/0263
     getStops();
 }());
