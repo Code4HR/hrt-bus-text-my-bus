@@ -21,7 +21,6 @@ development
 ---
 To test locally you DO NOT need to set up twilio. You can install the dependencies and test locally what type of reponse messages are formed from the console.
 
-<<<<<<< HEAD
 The rest will be handled by the third party service
 
 installation
@@ -37,9 +36,4 @@ node app.js
 
 HRT BUS API
 ----
-=======
-![Imgur](http://i.imgur.com/UTX2FUu.png)
-
-
->>>>>>> 5fc3ed9d5d1ff6db6c0672ba0f1eb6408df79978
 http://api.hrtb.us/api/
