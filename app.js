@@ -43,14 +43,18 @@
     app.post('/msg', function (req, res) {
         // TRANSFORM THIS DATA.
         var busstop = req.body.Body;
-        res.writeHead(200, {'Content-Type': 'text/xml'});
         console.log("****DEBUGGING***");
         console.log(req.headers);
         console.log(req.query);
         console.log(req.body);
         console.log("form",req.form);
         console.log(req.params);
-        getResponse(req.body.Body).then(res.end.bind(res));
+        (isNaN(parseInt(req.body.Body)) ? 
+            getResponse('Hi, thanks for texting your HRT bus! Please text a ' 
+                 + 'stop number to find the next time your bus will come your '
+                 + 'way.') : 
+             // http://hrtb.us/#stops/0263
+            getStops(req.body.Body).then(getResponse)).then(res.send.bind(res));
     });
 
     /**
@@ -66,10 +70,6 @@
                 + '<Response>\n<Message>' + message + '</Message>\n</Response>');
         });
     };
-
-    app.get('/msg/:id', function (req, res) {
-        getStops(req.params.id).then(getResponse).then(res.send.bind(res));
-    });
 
     /** 
      * Makes API request to the HRTB.US API and transform the json results.
@@ -109,6 +109,8 @@
         // Sort by routes and destinations.
         return _.map(_.groupBy(JSON.parse(body), 'destination'),
             function (stops) {
+                // EVMS/NORFOLK will be here in about 10, the next one in 15.
+                // NEWTOWN ROAD will be here in about 5 minutes and the next.
                 return _.reduce(stops, function (response, stop) {
                     return { 
                               '0': 'Light rail'
@@ -123,14 +125,11 @@
             }).join('\n');
     };
 
-    // EVMS/NORFOLK will be here in about 10, the next one in 15.
-    // NEWTOWN ROAD will be here in about 5 minutes and the next.
     app.set('port', process.env.PORT || 3000);
 
     app.listen(app.get('port'), function() {
         console.log('Express server listening on port ' + app.get('port'));
     });
 
-    // http://hrtb.us/#stops/0263
     getStops();
 }());
