@@ -37,16 +37,21 @@
         var text = req.body.Body;
         logRequestDebuggingValues(req);
 
-        // Check for an address.
-        (hasAddress(text) ?
+        // Asking for help.
+        (/help/i.test(text) ?
+            getResponse('Hi, thanks for texting your HRT bus! Please text an ' 
+                + 'address or a stop number to find the next time your bus will' 
+                + ' come your way.') :
+         // Check for an address.
+         hasAddress(text) ?
             getStop(text).then(getTimes).then(getResponse) :
          // Checks for a bus stop number, like http://hrtb.us/#stops/0263
          hasStop(text) ? 
             getTimes(text).then(getResponse) : 
             // Otherwise, give a help(ful) message.
-            getResponse('Hi, thanks for texting your HRT bus! Please text a ' 
-                 + 'stop number to find the next time your bus will come your '
-                 + 'way.')).then(res.send.bind(res));
+            getResponse('Hi! You have texted the Text Your Bus application.  I '
+                + 'do not quite understand your request.  Please text "help" '
+                + 'for a list of possible options.')).then(res.send.bind(res));
     });
 
     /**
