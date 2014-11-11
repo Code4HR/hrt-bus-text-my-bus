@@ -22,7 +22,8 @@
         moment = require('moment'),
         _ = require('lodash'),
         bodyParser = require('body-parser'),
-        bPromise = require('bluebird');
+        bPromise = require('bluebird'),
+        where = require('where');
 
     app.use(bodyParser.urlencoded({
         extended: true
@@ -83,9 +84,67 @@
      **/
     var getStop = function (address) {
         return new bPromise(function (resolve, reject) {
-            // TODO - Write the code to return a stop from the given address.
-            return resolve(address);
+            var geocoder = new where.Geocoder;
+            geocoder.toPoint({ display_name: address , country: 'us' },
+                function (error, points) {
+                    var bounded = bound(points), point = bounded[0];
+                    if (bounded.length === 0) {
+                        return resolve('0');
+                    } else {
+                        r.get('http://api.hrtb.us/api/stops/near/' 
+                                + point.lat + '/' + point.lon,
+                            function (error, response, body) {
+                                return resolve(closestStop(JSON.parse(body)
+                                    , {location: [point.lon, point.lat]}));
+                            });
+                    }
+                });
         });
+    };
+
+    /**
+     * Returns the Nominatim points bounded by a bounding box local to the
+     * Seven Cities area.
+     *
+     * @param {Array} points - The points returned from Nominatim.
+     * 
+     * @return {Array} The points local to the Seven Cities.
+     **/
+    var bound = function (points) {
+        return _.filter(points, function (point) {
+            // viewbox: -77.32,37.28,-75.33,36.51
+            return point.lon > -77.32 && point.lon < -75.33
+                && point.lat > 36.51 && point.lat < 37.28;
+        });
+    };
+
+    /**
+     * Returns the name of the closest stop to the address specified.
+     *
+     * @param {Array} stops - The stop list.
+     * @param {Object} here - The coordinates for the address specified.
+     *
+     * @return {String} The id of the closest stop.
+     **/
+    var closestStop = function (stops, here) {
+        return _.reduce(stops, function (first, second) {
+            return distance(here, first) < distance(here, second) ?
+                first :
+                second;
+        }, {stopId: 'Richmond', location: [-77.4928, 37.5244]}).stopId;
+    };
+
+    /**
+     * Returns the distance between two points.
+     *
+     * @param {Object} x - The first point.
+     * @param {Object} y - The second point.
+     *
+     * @return {Number} The distance from x to y.
+     **/
+    var distance = function (x, y) {
+        return Math.sqrt(Math.pow(x.location[0] - y.location[0], 2) 
+            + Math.pow(x.location[1] - y.location[1], 2));
     };
 
     /** 
