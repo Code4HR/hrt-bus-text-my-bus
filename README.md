@@ -21,6 +21,20 @@ development
 ---
 To test locally you DO NOT need to set up twilio. You can install the dependencies and test locally what type of reponse messages are formed from the console.
 
+A command to test each type of response the server can currently handle:
+* Address
+```bash
+curl -X POST -d "From=7571112222&Body=111 Granby St." http://localhost:3000/msg
+```
+* Stop number
+```bash
+curl -X POST -d "From=7571112222&Body=8004" http://localhost:3000/msg
+```
+* Default help message
+```bash
+curl -X POST -d "From=7571112222&Body=hi!" http://localhost:3000/msg
+```
+
 The rest will be handled by the third party service
 
 installation
