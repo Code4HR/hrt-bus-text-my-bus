@@ -18,7 +18,6 @@
         express = require("express"),
         app = express(),
         path = require('path'),
-        //twilio = require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN),
         twilio = require('twilio'),
         moment = require('moment'),
         _ = require('lodash'),
@@ -32,17 +31,17 @@
     app.use(bodyParser.json());
     app.use(express.static(path.join(__dirname, 'public')));
 
-    // Example curl from twilio.
-    /* curl -X POST -d "From=7571112222&Body=8004" http://localhost:3000/msg */
+    // Twilio route.
     app.post('/msg', function (req, res) {
+        var text = req.body.Body;
         logRequestDebuggingValues(req);
 
         // Check for an address.
-        (hasAddress(req.body.Body) ?
-            getStop(req.body.Body).then(getTimes).then(getResponse) :
-         // Checks for a stop number, like http://hrtb.us/#stops/0263
-         isFinite(parseInt(req.body.Body)) ? 
-            getTimes(req.body.Body).then(getResponse) : 
+        (hasAddress(text) ?
+            getStop(text).then(getTimes).then(getResponse) :
+         // Checks for a bus stop number, like http://hrtb.us/#stops/0263
+         hasStop(text) ? 
+            getTimes(text).then(getResponse) : 
             // Otherwise, give a help(ful) message.
             getResponse('Hi, thanks for texting your HRT bus! Please text a ' 
                  + 'stop number to find the next time your bus will come your '
@@ -66,11 +65,11 @@
     /**
      * Predicate, holds when the body has an address.
      *
-     * @param {String} body - The request body to recognise as an address.
+     * @param {String} text - The text a citizen sent.
      *
      * @return {Boolean} Does the body have an address?
      **/
-    var hasAddress = function (body) {
+    var hasAddress = function (text) {
         // TODO - Write address recogniser.
         return false;
     };
@@ -101,40 +100,40 @@
         return new bPromise(function (resolve, reject) {
             r.get("http://api.hrtb.us/api/stop_times/" + stop,
                 function (err, response, body) {
-                    var stops = body === '[]' || JSON.parse(body) === [] ?
+                    /* If we cannot parse the times, provide a helpful error 
+                     * message. */
+                    return resolve(body === '[]' || JSON.parse(body) === [] ?
                         'Hmm, I cannot tell if that stop does not exist or if '
                             + 'no buses will come to that stop in the near '
                             + 'future.\nEither way, no buses will come to the '
                             + 'stop you mentioned any time soon.' :
-                        transformSteps(body);
-                    console.log(stops);
-                    return resolve(stops);
+                        showTimes(JSON.parse(body)));
                 });
         }); 
     };
 
     /**
-     * Parse out the stops and return them in a human-readable format.
+     * Transforms the times into a human-readable format.
      *
-     * @param {String} body - The body of the response.
+     * @param {Object} json - The times JSON.
      *
-     * @return {String} The stops in a string format.
+     * @return {String} The times in a human-readable string format.
      **/
-    var transformSteps = function (body) {
+    var showTimes = function (json) {
         // Sort by routes and destinations.
-        return _.map(_.groupBy(JSON.parse(body), 'destination'),
-            function (stops) {
+        return _.map(_.groupBy(json, 'destination'),
+            function (times) {
                 // EVMS/NORFOLK will be here in about 10, the next one in 15.
                 // NEWTOWN ROAD will be here in about 5 minutes and the next.
-                return _.reduce(stops, function (response, stop) {
+                return _.reduce(times, function (response, time) {
                     return { 
                               '0': 'Light rail'
                             , '3': 'Bus'
                             , '4': 'Ferry' 
-                        }[stop.drop_off_type] + ' '  
-                        + stop.routeShortName + ' to ' + stop.destination 
+                        }[time.drop_off_type] + ' '  
+                        + time.routeShortName + ' to ' + time.destination 
                         + ' will arrive in ' 
-                        + moment.utc(stop.arrival_time).diff(moment.utc()
+                        + moment.utc(time.arrival_time).diff(moment.utc()
                             , 'minutes') 
                         + ' minutes.';
                 }, '');
@@ -150,9 +149,22 @@
      **/
     var getResponse = function (message) {
         return new bPromise(function (resolve, reject) {
+            console.log(message);
             resolve('<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n'
-                + '<Response>\n<Message>' + message + '</Message>\n</Response>');
+                + '<Response>\n<Message>' + message 
+                + '</Message>\n</Response>');
         });
+    };
+
+    /**
+     * Predicate, holds when the text represents a bus stop number.
+     *
+     * @param {String} text - The text a citizen sent.
+     *
+     * @return {Boolean} Does the text represent a bus stop number?
+     **/
+    var hasStop = function (text) {
+        return isFinite(parseInt(text));
     };
 
     app.set('port', process.env.PORT || 3000);
