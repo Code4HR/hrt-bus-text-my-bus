@@ -37,12 +37,12 @@
     app.post('/msg', function (req, res) {
         logRequestDebuggingValues(req);
 
-        // Checks for a stop number, like http://hrtb.us/#stops/0263
-        (isFinite(parseInt(req.body.Body)) ? 
-            getStops(req.body.Body).then(getResponse) : 
-         // Check for an address.
-         hasAddress(req.body.Body) ?
-            getAddress(req.body.Body).then(getResponse) :
+        // Check for an address.
+        (hasAddress(req.body.Body) ?
+            getStop(req.body.Body).then(getTimes).then(getResponse) :
+         // Checks for a stop number, like http://hrtb.us/#stops/0263
+         isFinite(parseInt(req.body.Body)) ? 
+            getTimes(req.body.Body).then(getResponse) : 
             // Otherwise, give a help(ful) message.
             getResponse('Hi, thanks for texting your HRT bus! Please text a ' 
                  + 'stop number to find the next time your bus will come your '
@@ -63,17 +63,43 @@
         console.log(req.params);
     };
 
+    /**
+     * Predicate, holds when the body has an address.
+     *
+     * @param {String} body - The request body to recognise as an address.
+     *
+     * @return {Boolean} Does the body have an address?
+     **/
+    var hasAddress = function (body) {
+        // TODO - Write address recogniser.
+        return false;
+    };
+
+    /**
+     * Returns a promise to handle a stop from an address.
+     *
+     * @param {String} address - The address to return a stop from.
+     *
+     * @return {Promise} The stop promise.
+     **/
+    var getStop = function (address) {
+        return new bPromise(function (resolve, reject) {
+            // TODO - Write the code to return a stop from the given address.
+            return resolve(address);
+        });
+    };
+
     /** 
      * Makes API request to the HRTB.US API and transform the json results.
      *
-     * @param {String} param - The parameter to get stops for.
+     * @param {String} stop - The stop to get times for.
      *
      * @return {Promise} A promise returning the stringified hrtb.us results,
      *      passing them into the continuation.
      **/
-    var getStops = function (param) {
+    var getTimes = function (stop) {
         return new bPromise(function (resolve, reject) {
-            r.get("http://api.hrtb.us/api/stop_times/" + param,
+            r.get("http://api.hrtb.us/api/stop_times/" + stop,
                 function (err, response, body) {
                     var stops = body === '[]' || JSON.parse(body) === [] ?
                         'Hmm, I cannot tell if that stop does not exist or if '
@@ -126,32 +152,6 @@
         return new bPromise(function (resolve, reject) {
             resolve('<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n'
                 + '<Response>\n<Message>' + message + '</Message>\n</Response>');
-        });
-    };
-
-    /**
-     * Predicate, holds when the body has an address.
-     *
-     * @param {String} body - The request body to recognise as an address.
-     *
-     * @return {Boolean} Does the body have an address?
-     **/
-    var hasAddress = function (body) {
-        // TODO - Write address recogniser.
-        return false;
-    };
-
-    /**
-     * Returns a message from the given address.
-     *
-     * @param {String} address - The address to return a Twilio message from.
-     *
-     * @return {Promise} The stop promise.
-     **/
-    var getAddress = function (address) {
-        return new bPromise(function (resolve, reject) {
-            // TODO - Write the code to return a stop from the given address.
-            return resolve(address);
         });
     };
 
