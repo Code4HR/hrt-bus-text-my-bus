@@ -71,8 +71,7 @@
      * @return {Boolean} Does the body have an address?
      **/
     var hasAddress = function (text) {
-        // TODO - Write address recogniser.
-        return false;
+        return /^\s*(\d*)\s*([a-z]+\s*)+(([a-z]+[.]?)\s*,?)?\s*(([a-z]*\s*)*,?)?\s*(V(irgini)?a)?\s*$/i.test(text)
     };
 
     /**
