@@ -45,7 +45,7 @@ npm install
 node app.js
 ```
 
-<img src="http://i.imgur.com/UTX2FUu.png"  style="width:400px";></img>
+<img src="http://i.imgur.com/UTX2FUu.png" width="400px";></img>
 
 
 HRT BUS API
