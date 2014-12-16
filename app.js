@@ -39,15 +39,15 @@
 
         // Asking for help.
         (/help/i.test(text) ?
-            getResponse('Hi, thanks for texting your HRT bus! Please text an ' 
-                + 'address or a stop number to find the next time your bus will' 
+            getResponse('Hi, thanks for texting your HRT bus! Please text an '
+                + 'address or a stop number to find the next time your bus will'
                 + ' come your way.') :
          // Check for an address.
          hasAddress(text) ?
             getStop(text).then(getTimes).then(getResponse) :
          // Checks for a bus stop number, like http://hrtb.us/#stops/0263
-         hasStop(text) ? 
-            getTimes(text).then(getResponse) : 
+         hasStop(text) ?
+            getTimes(text).then(getResponse) :
             // Otherwise, give a help(ful) message.
             getResponse('Hi! You have texted the Text Your Bus application.  I '
                 + 'do not quite understand your request.  Please text "help" '
@@ -95,7 +95,7 @@
                     if (bounded.length === 0) {
                         return resolve('0');
                     } else {
-                        r.get('http://api.hrtb.us/api/stops/near/' 
+                        r.get('http://api.hrtb.us/api/stops/near/'
                                 + point.lat + '/' + point.lon,
                             function (error, response, body) {
                                 return resolve(closestStop(JSON.parse(body)
@@ -111,7 +111,7 @@
      * Seven Cities area.
      *
      * @param {Array} points - The points returned from Nominatim.
-     * 
+     *
      * @return {Array} The points local to the Seven Cities.
      **/
     var bound = function (points) {
@@ -147,11 +147,11 @@
      * @return {Number} The distance from x to y.
      **/
     var distance = function (x, y) {
-        return Math.sqrt(Math.pow(x.location[0] - y.location[0], 2) 
+        return Math.sqrt(Math.pow(x.location[0] - y.location[0], 2)
             + Math.pow(x.location[1] - y.location[1], 2));
     };
 
-    /** 
+    /**
      * Makes API request to the HRTB.US API and transform the json results.
      *
      * @param {String} stop - The stop to get times for.
@@ -163,7 +163,7 @@
         return new bPromise(function (resolve, reject) {
             r.get("http://api.hrtb.us/api/stop_times/" + stop,
                 function (err, response, body) {
-                    /* If we cannot parse the times, provide a helpful error 
+                    /* If we cannot parse the times, provide a helpful error
                      * message. */
                     return resolve(body === '[]' || JSON.parse(body) === [] ?
                         'Hmm, I cannot tell if that stop does not exist or if '
@@ -172,7 +172,7 @@
                             + 'stop you mentioned any time soon.' :
                         showTimes(JSON.parse(body)));
                 });
-        }); 
+        });
     };
 
     /**
@@ -189,15 +189,15 @@
                 // EVMS/NORFOLK will be here in about 10, the next one in 15.
                 // NEWTOWN ROAD will be here in about 5 minutes and the next.
                 return _.reduce(times, function (response, time) {
-                    return { 
+                    return {
                               '0': 'Light rail'
                             , '3': 'Bus'
-                            , '4': 'Ferry' 
-                        }[time.drop_off_type] + ' '  
-                        + time.routeShortName + ' to ' + time.destination 
-                        + ' will arrive in ' 
+                            , '4': 'Ferry'
+                        }[time.drop_off_type] + ' '
+                        + time.routeShortName + ' to ' + time.destination
+                        + ' will arrive in '
                         + moment.utc(time.arrival_time).diff(moment.utc()
-                            , 'minutes') 
+                            , 'minutes')
                         + ' minutes.';
                 }, '');
             }).join('\n');
@@ -214,7 +214,7 @@
         return new bPromise(function (resolve, reject) {
             console.log(message);
             resolve('<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n'
-                + '<Response>\n<Message>' + message 
+                + '<Response>\n<Message>' + message
                 + '</Message>\n</Response>');
         });
     };
