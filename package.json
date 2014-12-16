@@ -4,7 +4,7 @@
   "description": "hrt-bus-text-my-bus ===================",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha test"
   },
   "repository": {
     "type": "git",
@@ -27,5 +27,8 @@
     "request": "^2.45.0",
     "twilio": "^1.7.0",
     "where": "^0.1.2"
+  },
+  "devDependencies": {
+    "mocha": "^2.0.1"
   }
 }
