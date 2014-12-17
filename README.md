@@ -2,6 +2,8 @@
 hrt-bus-text-my-bus
 ===================
 
+[![Build Status](https://travis-ci.org/Code4HR/hrt-bus-text-my-bus.svg?branch=master)](https://travis-ci.org/Code4HR/hrt-bus-text-my-bus)
+
 STATUS: pre-alpha need more testing
 phone number: 757-913-5000  
 
