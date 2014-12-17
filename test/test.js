@@ -12,14 +12,19 @@ var app = require("../app.js");
 
 
 describe('General incoming request', function(){
-  it('respond with xml', function(done){
+  it('responds with xml', function(done){
     r(app)
     .post('/msg')
     .send({Body:"8004"})
     .set('Accept', 'application/xml')
-    .expect(200, done);
+    .expect(200)
+    .end(function(err, res){
+      if (err) throw err;
+      done();
+    });
   });
 });
+
 
 function clientError(e) {
   return e.code >= 400 && e.code < 500;
