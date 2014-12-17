@@ -13,7 +13,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
  */
-(function () {
+module.exports = (function () {
     var r = require("request"),
         express = require("express"),
         app = express(),
@@ -76,7 +76,7 @@
      * @return {Boolean} Does the body have an address?
      **/
     var hasAddress = function (text) {
-        return /^\s*(\d*)\s*(([a-z]+[.]?|\d*(1st|[23]n?d|[4-9]th))\s*)+(([a-z]+[.]?)\s*,?)?\s*(([a-z]*\s*)*,?)?\s*(V(irgini)?a)?\s*$/i.test(text)
+        return /^\s*(\d*)\s*(([a-z]+[.]?|\d*(1st|[23]n?d|[4-9]th))\s*)+(([a-z]+[.]?)\s*,?)?\s*(([a-z]*\s*)*,?)?\s*(V(irgini)?a)?\s*$/i.test(text);
     };
 
     /**
@@ -234,4 +234,5 @@
     app.listen(app.get('port'), function() {
         console.log('Express server listening on port ' + app.get('port'));
     });
+    return app;
 }());
