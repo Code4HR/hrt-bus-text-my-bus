@@ -1,0 +1,59 @@
+var assert = require("assert");
+var express = require("express");
+var r = require("supertest");
+var parseString = require('xml2js').parseString;
+var should = require('should');
+/**
+* Test
+*
+* @param {Object} req - The request value.
+**/
+process.env.PORT = 4000;
+var app = require("../app.js");
+
+
+describe('General incoming request', function(){
+
+  it('responds with xml', function(done){
+    r(app)
+    .post('/msg')
+    .send({Body:"8004"})
+    .set('Accept', 'application/xml')
+    .expect(200)
+    .end(function(err, res){
+      if (err) throw err;
+      done();
+    });
+  });
+
+  it('light rail stops are valid, testing 8004', function(done){
+    r(app)
+    .post('/msg')
+    .send({Body:"8004"})
+    .set('Accept', 'application/xml')
+    .expect(200)
+    .end(function(err, res){
+      if (err) throw err;
+      should.not.exist(err);
+
+      // cleans utf8 parsing for xml in form
+      // see http://www.multiasking.com/blog/xml2js-sax-js-non-whitespace-before-first-tag/
+      var xml = res.text.replace("\ufeff", "");
+      parseString(xml, function (err, ouput) {
+         var parse = ouput.Response.Message[0];
+         parse.should.startWith('Light rail ');
+         //parse.should.have("Light rail");
+      });
+      done();
+    });
+  });
+});
+
+
+// #TODO Tests for
+// Bounding Boxes
+// Asking for help
+// Checking for input a known address
+// Checking for input a unknown/invalid address
+// Check for known stop number
+// Check for unknown/invalid stop number

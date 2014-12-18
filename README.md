@@ -2,6 +2,8 @@
 hrt-bus-text-my-bus
 ===================
 
+[![Build Status](https://travis-ci.org/Code4HR/hrt-bus-text-my-bus.svg?branch=master)](https://travis-ci.org/Code4HR/hrt-bus-text-my-bus)
+
 STATUS: pre-alpha need more testing
 phone number: 757-913-5000  
 
@@ -45,7 +47,7 @@ npm install
 node app.js
 ```
 
-<img src="http://i.imgur.com/UTX2FUu.png"  style="width:400px";></img>
+<img src="http://i.imgur.com/UTX2FUu.png" width="400px";></img>
 
 
 HRT BUS API
