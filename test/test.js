@@ -68,6 +68,7 @@ describe('General incoming request', function(){
     });
   });
   it('should decode a full address', function(done){
+    this.timeout(10000);
     r(app)
     .post('/msg')
     .send({Body:"111 Granby street Norfolk VA 23508"})
