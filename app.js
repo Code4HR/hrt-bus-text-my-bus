@@ -169,6 +169,7 @@ module.exports = (function () {
      *      passing them into the continuation.
      **/
     var getTimes = function (stop) {
+        stop = stop.trim();
         return new bPromise(function (resolve, reject) {
             r.get("http://api.hrtb.us/api/stop_times/" + stop,
                 function (err, response, body) {
@@ -236,7 +237,7 @@ module.exports = (function () {
      * @return {Boolean} Does the text represent a bus stop number?
      **/
     var hasStop = function (text) {
-        return isFinite(parseInt(text));
+        return isFinite(parseInt((text.trim())));
     };
 
     app.set('port', process.env.PORT || 3000);

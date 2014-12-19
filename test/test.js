@@ -27,6 +27,7 @@ describe('General incoming request', function(){
   });
 
   it('decode a typical stop, such as for a light rail stop named 8004', function(done){
+    this.timeout(10000);
     r(app)
     .post('/msg')
     .send({Body:"8004"})
@@ -46,6 +47,29 @@ describe('General incoming request', function(){
       });
     });
   });
+
+  it('trim typical stom information incase of whitespace', function(done){
+    this.timeout(10000);
+    r(app)
+    .post('/msg')
+    .send({Body:" 8004  "})
+    .set('Accept', 'application/xml')
+    .expect(200)
+    .end(function(err, res){
+      if (err) throw err;
+      should.not.exist(err);
+
+      // cleans utf8 parsing for xml in form
+      // see http://www.multiasking.com/blog/xml2js-sax-js-non-whitespace-before-first-tag/
+      var xml = res.text.replace("\ufeff", "");
+      parseString(xml, function (err, ouput) {
+        var parse = ouput.Response.Message[0];
+        parse.should.startWith('Light rail ');
+        done();
+      });
+    });
+  });
+
 
   it('should decode a bus stop for an address in norfolk ', function(done){
     r(app)
