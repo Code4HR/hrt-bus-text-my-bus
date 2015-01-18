@@ -44,7 +44,7 @@ module.exports = (function () {
                 + ' come your way.') :
          // Check for an address.
          hasAddress(text) ?
-             getResponse('Hi! Currently we only handle Bus Stop numbers. Try our app http://hrtb.us if you need nearest route information.').then(res.send.bind(res)) :
+             getResponse('Hi, currently we only handle Bus Stop numbers. Try our app http://hrtb.us if you need nearest route information.').then(res.send.bind(res)) :
          // Checks for a bus stop number, like http://hrtb.us/#stops/0263
          hasStop(text) ?
             getTimes(text).then(getResponse) :

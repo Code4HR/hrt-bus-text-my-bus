@@ -86,7 +86,7 @@ describe('General incoming request', function(){
       var xml = res.text.replace("\ufeff", "");
       parseString(xml, function (err, ouput) {
         var parse = ouput.Response.Message[0];
-        parse.should.startWith('Light rail ');
+        parse.should.startWith('Hi, currently');
         done();
       });
     });
