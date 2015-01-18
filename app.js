@@ -44,7 +44,7 @@ module.exports = (function () {
                 + ' come your way.') :
          // Check for an address.
          hasAddress(text) ?
-            getStop(text).then(getTimes).then(getResponse) :
+             getResponse('Hi! Currently we only handle Bus Stop numbers. Try our app http://hrtb.us if you need nearest route information.').then(res.send.bind(res)) :
          // Checks for a bus stop number, like http://hrtb.us/#stops/0263
          hasStop(text) ?
             getTimes(text).then(getResponse) :
@@ -78,6 +78,15 @@ module.exports = (function () {
     var hasAddress = function (text) {
         return /^\s*(\d*)\s*(([a-z]+[.]?|\d*(1st|[23]n?d|[4-9]th))\s*)+(([a-z]+[.]?)\s*,?)?\s*(([a-z]*\s*)*,?)?\s*(V(irgini)?a)?\s*$/i.test(text);
     };
+
+
+    /**
+    * Apologizes
+    *
+    *
+    *
+    * @return {Promise} The msg promise.
+    **/
 
     /**
      * Returns a promise to handle a stop from an address.
