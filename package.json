@@ -4,7 +4,9 @@
   "description": "hrt-bus-text-my-bus ===================",
   "main": "app.js",
   "scripts": {
-    "test": "mocha test"
+    "test": "mocha test",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "repository": {
     "type": "git",
@@ -26,12 +28,14 @@
     "querystring": "^0.2.0",
     "request": "^2.51.0",
     "should": "^4.4.1",
-    "supertest": "^0.15.0",
-    "twilio": "^1.7.0",
+    "supertest": "^2.0.0",
+    "twilio": "^2.1.1",
     "where": "^0.1.2",
-    "xml2js": "^0.4.4"
+    "xml2js": "^0.4.4",
+    "snyk": "^1.85.0"
   },
   "devDependencies": {
     "mocha": "^2.0.1"
-  }
+  },
+  "snyk": true
 }
